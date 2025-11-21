@@ -45,7 +45,7 @@ const CategoryPage = () => {
           {category.charAt(0).toUpperCase() + category.slice(1)}
         </motion.h1>
 
-        <motion.div className="p-2 w-full bg-white  mx-auto relative rounded-md mb-5">
+        <motion.div className="p-2 w-full bg-white  mx-auto relative rounded-md my-5">
           <input
             type="text"
             placeholder="Search for products"
