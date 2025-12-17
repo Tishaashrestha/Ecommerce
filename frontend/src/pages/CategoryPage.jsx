@@ -1,11 +1,10 @@
 //import React from 'react'
 import { motion } from "framer-motion";
+import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useProductStore } from "../stores/useProductStore";
 import { useParams } from "react-router-dom";
-import ProductCard from "../components/ProductCard";
-import { Search } from "lucide-react";
-import ProductModal from "../components/ProductModal";
+import ProductCard from "../components/ProductModal";
 const CategoryPage = () => {
   const { fetchProductsByCategory, products } = useProductStore();
   const { category } = useParams();
@@ -20,18 +19,7 @@ const CategoryPage = () => {
     product.name.toLowerCase().includes(searchParams.toLowerCase())
   );
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = (product) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setSelectedProduct(null);
-    setIsModalOpen(false);
-  };
+  // no modal state needed — clicking a product navigates to product page
 
   return (
     <div className="min-h-screen">
@@ -68,17 +56,10 @@ const CategoryPage = () => {
           )}
 
           {filteredProducts?.map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              openModal={openModal}
-            />
+            <ProductCard key={product._id ?? product.id} product={product} />
           ))}
         </motion.div>
       </div>
-      {isModalOpen && (
-        <ProductModal product={selectedProduct} closeModal={closeModal} />
-      )}
     </div>
   );
 };

@@ -1,60 +1,89 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import axiosInstance from "../lib/axios";
 
-const AddReview = ({ productId }) => {
-  const [rating, setRating] = useState(0); // selected stars
-  const [hover, setHover] = useState(0); // hover effect
-  const [review, setReview] = useState(""); // text review
+export default function AddReview({ productId, onSuccess }) {
+  const [rating, setRating] = useState(5);
+  const [hover, setHover] = useState(0);
+  const [title, setTitle] = useState("");
+  const [comment, setComment] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = () => {
-    console.log({
-      productId,
-      rating,
-      review,
-    });
-
-    setRating(0);
-    setReview("");
+  const submit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    if (!productId) {
+      setError("Product missing");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await axiosInstance.post("/reviews", {
+        product: productId,
+        rating,
+        title,
+        comment,
+      });
+      const created = res?.data?.data;
+      setRating(5);
+      setTitle("");
+      setComment("");
+      if (onSuccess) onSuccess(created);
+    } catch (err) {
+      setError(
+        err?.response?.data?.message ||
+          err?.response?.data?.status ||
+          "Failed to submit review"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="mt-4 border-t pt-4">
-      <h3 className="text-lg font-semibold mb-2">Add a Review</h3>
-
-      {/* ⭐ Star Rating */}
-      <div className="flex gap-1 mb-3">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <span
-            key={star}
-            className={`cursor-pointer text-3xl ${
-              (hover || rating) >= star ? "text-yellow-400" : "text-gray-400"
-            }`}
-            onClick={() => setRating(star)}
-            onMouseEnter={() => setHover(star)}
-            onMouseLeave={() => setHover(0)}
-          >
-            ★
-          </span>
-        ))}
+    <form onSubmit={submit} className="space-y-3">
+      <div>
+        <div className="text-sm mb-2">Your rating</div>
+        <div className="flex gap-1">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <button
+              key={i}
+              type="button"
+              onMouseEnter={() => setHover(i)}
+              onMouseLeave={() => setHover(0)}
+              onClick={() => setRating(i)}
+              className={`text-2xl transition ${
+                (hover || rating) >= i ? "text-yellow-400" : "text-gray-300"
+              }`}
+              aria-label={`${i} star`}
+            >
+              ★
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Review Textarea */}
-      <textarea
-        className="w-full border p-2 rounded"
-        rows={3}
-        value={review}
-        onChange={(e) => setReview(e.target.value)}
-        placeholder="Write your review..."
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Review title"
+        className="w-full border rounded px-2 py-1"
       />
-
-      {/* Submit Button */}
+      <textarea
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+        placeholder="Write your review"
+        className="w-full border rounded px-2 py-1"
+        rows={3}
+      />
+      {error && <div className="text-red-600 text-sm">{error}</div>}
       <button
-        onClick={handleSubmit}
-        className="bg-black text-white cursor-pointer border-2 border-black hover:bg-white hover:text-black transition-colors duration-100 px-4 py-2 rounded mt-3"
+        type="submit"
+        disabled={loading}
+        className="px-4 py-2 bg-black text-white rounded"
       >
-        Submit Review
+        {loading ? "Submitting..." : "Submit Review"}
       </button>
-    </div>
+    </form>
   );
-};
-
-export default AddReview;
+}

@@ -1,44 +1,45 @@
-import { X } from "lucide-react";
-import AddReview from "./AddReview";
+import React from "react";
+import { Link } from "react-router-dom";
 
-const ProductModal = ({ product, closeModal }) => {
+/*
+ This file used to be a modal. It now exports a simple ProductCard that
+ navigates to /product/:id (no popup). It keeps the same default export
+ so existing imports don't break.
+*/
+const ProductCard = ({ product }) => {
   if (!product) return null;
-
+  const productId = product._id ?? product.id;
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative">
-        {/* Close button */}
-        <button
-          onClick={closeModal}
-          className="absolute top-3 right-3 text-gray-200 cursor-pointer bg-red-800 hover:bg-red-500 rounded-full p-1"
-        >
-          <X size={20} />
-        </button>
-
-        {/* Product Image */}
+    <Link
+      to={`/product/${productId}`}
+      className="block w-full max-w-xs bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden border border-gray-100"
+      style={{ minWidth: 250 }}
+    >
+      <div className="aspect-[4/3] bg-gray-50 flex items-center justify-center">
         <img
           src={product.image}
-          className="w-full h-64 object-contain rounded-md"
+          alt={product.name}
+          className="max-h-48 object-contain"
         />
-
-        {/* Product Name */}
-        <h2 className="text-2xl font-semibold mt-3">{product.name}</h2>
-
-        {/* Price */}
-        <p className="text-xl font-bold text-gray-700 mt-2">
-          Rs. {product.price}
-        </p>
-
-        {/* Description */}
-        <p className="text-gray-600 mt-4">{product.description}</p>
-
-        {/* Add Review Component */}
-        <div className="mt-5">
-          <AddReview productId={product._id} />
+      </div>
+      <div className="p-4 flex flex-col gap-2">
+        <h3 className="text-lg font-semibold text-gray-800 truncate">
+          {product.name}
+        </h3>
+        <div className="flex items-center justify-between">
+          <div className="text-base text-gray-700 font-bold">
+            Rs. {product.price}
+          </div>
+          {product.rating ? (
+            <div className="text-yellow-400 text-sm font-semibold flex items-center gap-1">
+              {Number(product.rating).toFixed(1)}
+              <span>★</span>
+            </div>
+          ) : null}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
-export default ProductModal;
+export default ProductCard;
