@@ -53,6 +53,7 @@ export default function ProductPage() {
           const pRes = await axiosInstance.get(`/product/${id}`);
           foundProduct = pRes?.data?.product || null;
         } catch (err) {
+          console.log(err);
           foundProduct = null;
         }
         setProduct(foundProduct || null);
@@ -65,6 +66,7 @@ export default function ProductPage() {
           setReviews([]);
         }
       } catch (err) {
+        console.log(err);
         setProduct(null);
         setReviews([]);
       } finally {

@@ -51,35 +51,6 @@ const PurchaseSuccessPage = () => {
       </div>
     );
 
-  if (error)
-    return (
-      <div className="h-screen flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-[#8B4513] rounded-lg shadow-xl overflow-hidden relative z-10 p-6">
-          <h1 className="text-2xl font-bold text-center text-black mb-4">
-            Payment Result
-          </h1>
-          <p className="text-black text-center mb-4">
-            There was an issue processing your payment:
-          </p>
-          <p className="text-red-600 text-center mb-6">{error}</p>
-          <div className="flex gap-4 justify-center">
-            <Link
-              to="/cart"
-              className="px-4 py-2 bg-black text-white rounded-lg hover:bg-white hover:text-black transition"
-            >
-              Back to Cart
-            </Link>
-            <Link
-              to="/"
-              className="px-4 py-2 border rounded-lg hover:bg-black hover:text-white transition"
-            >
-              Continue Shopping
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-
   return (
     <div className="h-screen flex items-center justify-center px-4">
       <Confetti
