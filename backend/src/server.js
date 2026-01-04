@@ -7,6 +7,7 @@ import cartRoutes from "./routes/cart.route.js";
 import couponRoutes from "./routes/coupon.route.js";
 import paymentRoutes from "./routes/payment.route.js";
 import analyticsRoutes from "./routes/analytics.route.js";
+import emailRoutes from "./routes/email.route.js";
 import cors from "cors";
 
 import { connectDB } from "./lib/db.js";
@@ -33,6 +34,7 @@ app.use("/api/coupons", couponRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/email", emailRoutes);
 
 app.listen(PORT, () => {
   console.log("server is running on port http://localhost:" + PORT);

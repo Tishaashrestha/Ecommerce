@@ -17,21 +17,10 @@ export const getCartProducts = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-// In your addToCart controller, add debug logging to check productId
 export const addToCart = async (req, res) => {
   try {
-    // Log the incoming request body for debugging
-    console.log("addToCart req.body:", req.body);
-
-    // Example: expecting { productId, quantity, ... }
-    const { productId, quantity } = req.body;
-
-    if (!productId) {
-      return res
-        .status(400)
-        .json({ message: "Missing productId in request body" });
-    }
-
+    const { productId } = req.body;
+    console.log(productId);
     const user = req.user;
     const existingItem = user.cartItems.find((item) => item.id === productId);
     if (existingItem) {
@@ -40,8 +29,8 @@ export const addToCart = async (req, res) => {
       user.cartItems.push(productId);
     }
     await user.save();
-    res.status(200).json({ message: "Added to cart" });
-  } catch (error) {
+    res.json(user.cartItems);
+  } catch ({ error }) {
     console.log("Error in addToCart controller", error);
     res.status(500).json({
       message: "Server error",
